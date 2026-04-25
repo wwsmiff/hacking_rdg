@@ -34,7 +34,7 @@ Is this the best/most efficient way? I do not know.
 - Now since I am dealing with a racing game here, and I wanna narrow down the speed of the car which keeps changing per frame, and I spent a bunch of time trying to narrow down the value with `+ some speed` or `- some speed` or `> some speed` or `< speed`, etc. you get the point.
 - Now what I did not realize was ranges and **enabling floating point values**. I should have realized sooner that speeds are stored as floating point values of course, and after some time wasted, enabled `option scan_data_type float` and then based on the in-game HUD's speedometer, searched through a range of `start..end`, eg. If my speed was `163 mph`, the search would be `160..165`. Do this a few times and it'll get you down to a few matches.
 - Specifically for Race Driver: GRID, I got 10-11 matches for the speed value and I dont know which one was valid, because all of them were getting updated with the same value for every scan, hence I just went with the first value located at `36823db0`.
-![](screenshots/scanmem.png)
+![](assets/scanmem.png)
 
 ### Reading from the desired memory address in C
 ```c
@@ -75,12 +75,14 @@ create a pipewire filter -> get input to filter -> get vehicle speed from game -
 I have a feeling that this could have some kind of hidden race conditions but I'm not sure. Now this process comes with some issues, but mainly: no connections are made automatically, which means I need to manually setup links for applications -> filter input and filter output -> audio device. Luckily there's `qpwgraph` which allows me to do this.
 
 ###### without audio filter
-![](screenshots/without_filter.png)
+![](assets/without_filter.png)
 
 ###### with audio filter
-![](screenshots/with_filter.png)
+![](assets/with_filter.png)
 
-All the pipewire related code was based on this [example](https://docs.pipewire.org/tutorial7_8c-example.html) from the pipewire docs. So playing around for a long time with this file and figuring out what the heck is actually going on gave me more clarity and of course, reading the pipewire [docs](https://docs.pipewire.org/) itself was very ~~confusing~~ helpful! So far, all that happens is, the connected (using `qpwgraph`) application's audio stream's volume is mapped to the vehicle in Race Driver: GRID.
+All the pipewire related code was based on this [example](https://docs.pipewire.org/tutorial7_8c-example.html) from the pipewire docs. So playing around for a long time with this file and figuring out what the heck is actually going on gave me more clarity and of course, reading the pipewire [docs](https://docs.pipewire.org/) itself was very ~~confusing~~ helpful! So far, all that happens is, the connected (using `qpwgraph`) application's audio stream's volume is mapped to the vehicle in Race Driver: GRID, yes thats it!
+
+![](assets/gameplay.mp4)
 
 ### Future
 - I definitely wanna extend this to first make connections automatically.

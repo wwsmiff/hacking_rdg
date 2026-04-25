@@ -41,8 +41,6 @@ static void on_process(void *userdata, struct spa_io_position *position) {
   float *in_l, *in_r, *out_l, *out_r;
   uint32_t n_samples = position->clock.duration;
 
-  data->vol = max(0.2f, min(1.0f, data->vol));
-
   in_l = pw_filter_get_dsp_buffer(data->in_port_l, n_samples);
   in_r = pw_filter_get_dsp_buffer(data->in_port_r, n_samples);
   out_l = pw_filter_get_dsp_buffer(data->out_port_l, n_samples);
@@ -91,8 +89,8 @@ void *get_speed(void *data) {
   while (1) {
     struct memargs *args = (struct memargs *)(data);
     float vol =
-        (*(float *)readmem(args->fd, args->start_addr, args->sz)) / 75.0f;
-    args->d->vol = min(0.9999f, max(0.2f, vol));
+        (*(float *)readmem(args->fd, args->start_addr, args->sz)) / 120.0f;
+    args->d->vol = min(0.9999f, max(0.1f, vol));
   }
 }
 
