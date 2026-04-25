@@ -72,7 +72,7 @@ create a pipewire filter -> get input to filter -> get vehicle speed from game -
 - create a thread to continuously read the vehicle speed
 - create a thread to run the pipewire filter based on the speed.
 ```
-I have a feeling that this could have some kind of hidden race conditions but I'm not sure. Now this process comes with two big issues: 1. No connections are made automatically, which means I need to manually setup links for applications -> filter input and filter output -> audio device. Luckily there's `qpwgraph` which allows me to do this.
+I have a feeling that this could have some kind of hidden race conditions but I'm not sure. Now this process comes with some issues, but mainly: no connections are made automatically, which means I need to manually setup links for applications -> filter input and filter output -> audio device. Luckily there's `qpwgraph` which allows me to do this.
 
 ###### without audio filter
 ![](screenshots/without_filter.png)
