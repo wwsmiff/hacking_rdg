@@ -34,7 +34,7 @@ Is this the best/most efficient way? I do not know.
 - Now since I am dealing with a racing game here, and I wanna narrow down the speed of the car which keeps changing per frame, and I spent a bunch of time trying to narrow down the value with `+ some speed` or `- some speed` or `> some speed` or `< speed`, etc. you get the point.
 - Now what I did not realize was ranges and **enabling floating point values**. I should have realized sooner that speeds are stored as floating point values of course, and after some time wasted, enabled `option scan_data_type float` and then based on the in-game HUD's speedometer, searched through a range of `start..end`, eg. If my speed was `163 mph`, the search would be `160..165`. Do this a few times and it'll get you down to a few matches.
 - Specifically for Race Driver: GRID, I got 10-11 matches for the speed value and I dont know which one was valid, because all of them were getting updated with the same value for every scan, hence I just went with the first value located at `36823db0`.
-![scanmem workflow](screenshots/scanmem.png)
+![](screenshots/scanmem.png)
 
 ### Reading from the desired memory address in C
 ```c
@@ -56,3 +56,26 @@ int main() {
 }
 
 ```
+
+### Audio processing
+- Processing audio in linux is probably the hardest thing I've attempted to do till now simply because of non-standard and fragmented APIs and audio stacks. This was insanely difficult also because of the very lack luster documentation for linux audio APIs. I current use pipewire and googling is basically useless for anything related to audio programming in linux for some reason. But practically a whole day was wasted trying to figure out which library to use and how to even get shit working. It was just a horrible experience, _and this very well could just be a major skill issue on my part, but this was my experience_. So anyways after a lot of failed experiments, I settled on using `libpipewire`. This might be super unnecessary and complicated, but this was the only thing I could get working. Simpler option were to use `alsa` or `pulseaudio` but none of them worked. Also using something like `pactl` or `wpctl` by spawning a subprocess or fork is not even an option here, because of nature of the game and high speed audio updates.
+- Anyways, then I thought it was something as simple as 
+```
+connect to pw -> get stream -> change volume
+```
+
+**But how mistaken I was!** The actual process I've followed is,
+
+```
+create a pipewire filter -> get input to filter -> get vehicle speed from game -> process the filter using signal processing based on speed -> copy to filter output
+
+- create a thread to continuously read the vehicle speed
+- create a thread to run the pipewire filter based on the speed.
+```
+I have a feeling that this could have some kind of hidden race conditions but I'm not sure. Now this process comes with two big issues: 1. No connections are made automatically, which means I need to manually setup links for applications -> filter input and filter output -> audio device. Luckily there's `qpwgraph` which allows me to do this.
+
+###### without audio filter
+![](screenshots/without_filter.png)
+
+###### with audio filter
+![](screenshots/with_filter.png)
