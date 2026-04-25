@@ -82,9 +82,6 @@ I have a feeling that this could have some kind of hidden race conditions but I'
 
 All the pipewire related code was based on this [example](https://docs.pipewire.org/tutorial7_8c-example.html) from the pipewire docs. So playing around for a long time with this file and figuring out what the heck is actually going on gave me more clarity and of course, reading the pipewire [docs](https://docs.pipewire.org/) itself was very ~~confusing~~ helpful! So far, all that happens is, the connected (using `qpwgraph`) application's audio stream's volume is mapped to the vehicle in Race Driver: GRID, yes thats it!
 
-###### Gameplay with filter
-[![Gameplay](assets/thumbnail.png)](assets/gameplay.mp4)
-
 ### Future
 - I definitely wanna extend this to first make connections automatically.
 - Have more audio effects than just volume control.
